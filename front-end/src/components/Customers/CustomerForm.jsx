@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Grid, Paper } from '@mui/material';
+import { TextField, Button, Container, Typography, Paper } from '@mui/material';
+import { jwtDecode } from "jwt-decode";
 import './CustomerForm.css'; // Import your CSS file for custom styles
 
 const CustomerForm = () => {
@@ -10,7 +11,29 @@ const CustomerForm = () => {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [source, setSource] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false); // State to track admin status
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken.user.role;
+        setIsAdmin(userRole === 'admin');
+      } catch (err) {
+        console.error('Error decoding token:', err.message);
+        // Handle error or redirect to login page
+        navigate('/login'); // Redirect to login page if token is not valid or user is not admin
+      }
+    };
+
+    checkAdmin();
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,6 +61,18 @@ const CustomerForm = () => {
       console.error('Error adding customer:', err);
     }
   };
+
+  if (!isAdmin) {
+    return (
+      <Container maxWidth="sm" className="access-denied-container">
+        <Paper elevation={3} className="form-container">
+          <Typography variant="h6" align="center" className="access-denied-text">
+            Access Denied. Only admins can add customers.
+          </Typography>
+        </Paper>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm">

@@ -6,7 +6,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body; // Add role here
 
   try {
     let user = await User.findOne({ email });
@@ -14,17 +14,22 @@ exports.register = async (req, res) => {
       return res.status(400).json({ msg: "User already exists" });
     }
 
-    user = new User({ name, email, password });
+    const newUser = new User({
+      name,
+      email,
+      password,
+      role: role || 'user' // Set default role to 'user' if not provided
+    });
 
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
+    newUser.password = await bcrypt.hash(password, salt);
 
-    await user.save();
+    await newUser.save();
 
     const payload = {
       user: {
-        id: user.id,
-        role: user.role,
+        id: newUser.id,
+        role: newUser.role,
       },
     };
 

@@ -1,10 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, Typography, Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
-import './CustomerList.css';
+import {
+  Container,
+  Typography,
+  Table,
+  TableContainer,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  Button,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
+import { jwtDecode } from 'jwt-decode';
+import './CustomerList.css'; // Make sure to import your CSS file for custom styles
 
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false); // State to track admin status
+  const [editMode, setEditMode] = useState(false);
+  const [currentCustomer, setCurrentCustomer] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    source: '',
+  });
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -21,6 +48,11 @@ const CustomerList = () => {
         });
 
         setCustomers(res.data);
+
+        // Decode JWT token to get user role
+        const decodedToken = jwtDecode(token);
+        const userRole = decodedToken.user.role;
+        setIsAdmin(userRole === 'admin');
       } catch (err) {
         console.error('Error fetching customers:', err.response ? err.response.data : err.message);
       }
@@ -29,9 +61,89 @@ const CustomerList = () => {
     fetchCustomers();
   }, []);
 
+  const handleDeleteCustomer = async (customerId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      await axios.delete(`http://localhost:5000/api/customers/${customerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Update state to reflect deleted customer
+      setCustomers(customers.filter((customer) => customer._id !== customerId));
+    } catch (err) {
+      console.error('Error deleting customer:', err.response ? err.response.data : err.message);
+    }
+  };
+
+  const handleEditCustomer = (customer) => {
+    setCurrentCustomer(customer);
+    setFormData({
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone,
+      address: customer.address,
+      source: customer.source,
+    });
+    setEditMode(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditMode(false);
+    setCurrentCustomer(null);
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      source: '',
+    });
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmitEdit = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const updatedCustomer = { ...currentCustomer, ...formData };
+
+      const res = await axios.put(`http://localhost:5000/api/customers/${currentCustomer._id}`, updatedCustomer, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Update state to reflect updated customer
+      const updatedCustomers = customers.map((customer) =>
+        customer._id === res.data._id ? res.data : customer
+      );
+      setCustomers(updatedCustomers);
+
+      handleCloseEdit();
+    } catch (err) {
+      console.error('Error updating customer:', err.response ? err.response.data : err.message);
+    }
+  };
+
   return (
     <Container className="customer-list-container">
-      <Typography variant="h4" gutterBottom>Customer List</Typography>
+      <Typography variant="h4" gutterBottom>
+        Customer List
+      </Typography>
       <TableContainer component={Paper}>
         <Table className="customer-list-table">
           <TableHead>
@@ -41,12 +153,16 @@ const CustomerList = () => {
               <TableCell>Phone</TableCell>
               <TableCell>Address</TableCell>
               <TableCell>Source</TableCell>
+              {isAdmin && <TableCell>Action</TableCell>}
+              {/* Show Action column for admin only */}
             </TableRow>
           </TableHead>
           <TableBody>
             {customers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="empty-message">No customers found</TableCell>
+                <TableCell colSpan={isAdmin ? 6 : 5} className="empty-message">
+                  No customers found
+                </TableCell>
               </TableRow>
             ) : (
               customers.map((customer) => (
@@ -56,12 +172,93 @@ const CustomerList = () => {
                   <TableCell>{customer.phone}</TableCell>
                   <TableCell>{customer.address}</TableCell>
                   <TableCell>{customer.source}</TableCell>
+                  {isAdmin && (
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handleEditCustomer(customer)}
+                        sx={{ mr: 1 }} // Apply padding using sx prop (Material-UI v5)
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => handleDeleteCustomer(customer._id)}
+                        sx={{ mr: 1 }} // Apply padding using sx prop (Material-UI v5)
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Edit Customer Dialog */}
+      <Dialog open={editMode} onClose={handleCloseEdit}>
+        <DialogTitle>Edit Customer</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            name="name"
+            label="Name"
+            type="text"
+            fullWidth
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="email"
+            label="Email"
+            type="email"
+            fullWidth
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="phone"
+            label="Phone"
+            type="text"
+            fullWidth
+            value={formData.phone}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="address"
+            label="Address"
+            type="text"
+            fullWidth
+            value={formData.address}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="source"
+            label="Source"
+            type="text"
+            fullWidth
+            value={formData.source}
+            onChange={handleChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEdit} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleSubmitEdit} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

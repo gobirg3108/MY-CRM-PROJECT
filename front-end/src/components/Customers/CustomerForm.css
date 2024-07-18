@@ -16,4 +16,17 @@
   .submit-button {
     margin-top: 20px;
   }
+  .access-denied-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Centers vertically */
+  }
+  
+  .access-denied-text {
+    padding: 20px;
+    background-color: #f44336; /* Red background for danger */
+    color: white;
+    border-radius: 4px;
+  }
   
