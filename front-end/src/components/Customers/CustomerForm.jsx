@@ -43,7 +43,7 @@ const CustomerForm = () => {
         throw new Error('No token found');
       }
 
-      const res = await axios.post('http://localhost:5000/api/customers', {
+      const res = await axios.post('https://my-crm-project.onrender.com/api/customers', {
         name,
         email,
         phone,

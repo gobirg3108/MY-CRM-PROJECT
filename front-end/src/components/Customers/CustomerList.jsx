@@ -41,7 +41,7 @@ const CustomerList = () => {
           throw new Error('No token found');
         }
 
-        const res = await axios.get('http://localhost:5000/api/customers', {
+        const res = await axios.get('https://my-crm-project.onrender.com/api/customers', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -68,7 +68,7 @@ const CustomerList = () => {
         throw new Error('No token found');
       }
 
-      await axios.delete(`http://localhost:5000/api/customers/${customerId}`, {
+      await axios.delete(`https://my-crm-project.onrender.com/api/customers/${customerId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -121,7 +121,7 @@ const CustomerList = () => {
 
       const updatedCustomer = { ...currentCustomer, ...formData };
 
-      const res = await axios.put(`http://localhost:5000/api/customers/${currentCustomer._id}`, updatedCustomer, {
+      const res = await axios.put(`https://my-crm-project.onrender.com/api/customers/${currentCustomer._id}`, updatedCustomer, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

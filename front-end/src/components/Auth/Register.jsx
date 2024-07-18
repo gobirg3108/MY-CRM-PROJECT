@@ -16,7 +16,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', { name, email, password });
+      const response = await axios.post('https://my-crm-project.onrender.com/api/auth/register', { name, email, password });
       if (response.status === 200) {
         setSnackbarMessage('Registration successful. Redirecting to login page...');
         setSnackbarSeverity('success');
