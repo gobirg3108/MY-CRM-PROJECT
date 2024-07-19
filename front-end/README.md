@@ -1,107 +1,119 @@
+# CRM Frontend
 
-## CRM Frontend Application
+This is the frontend application for the CRM project. It is built with React and Material-UI, providing a user interface for managing customers, viewing reports, and follow-up email.
 
-This is the frontend application for the CRM system, built using React, Material-UI, and Vite.
+# Admin 
+- Email: guvi@gmail.com
+- Pass : Guvi@123
 
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Environment Variables](#environment-variables)
-- [Available Scripts](#available-scripts)
-- [Learn More](#learn-more)
-- [License](#license)
+# Authentication
+
+- Register (Default user)
+- Login 
+- Dashboard (Admin can edit and delete
+             User Only view the CustomerList )
+- Add Customer (Admin only Add the Customer)
+- Reports (Admin Only See the Reports)
+- Follow Up (Admin Only Access)
+
+
+
+
+
+## Prerequisites
+
+Ensure you have the following installed on your local machine:
+
+- Node.js (v14 or higher)
+- npm or yarn
 
 ## Installation
 
-### Prerequisites
-- Node.js
-- npm or yarn
+1. **Clone the repository:**
 
-### Steps
-1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/crm-frontend.git
+    git clone https://github.com/yourusername/crm-frontend.git
     cd crm-frontend
     ```
 
-2. Install the dependencies:
+2. **Install dependencies:**
+
+    Using npm:
+
     ```bash
     npm install
-    # or
+    ```
+
+    Or using yarn:
+
+    ```bash
     yarn install
     ```
 
-3. Set up environment variables. Create a `.env` file in the root directory and add the following:
-    ```bash
-    VITE_API_BASE_URL=http://localhost:5000
+## Configuration
+
+1. **Set up environment variables:**
+
+    Create a `.env` file in the root of the project and add the following environment variable:
+
+    ```
+    REACT_APP_API_URL=https://my-crm-project.onrender.com/api
     ```
 
-## Usage
+    Replace `https://my-crm-project.onrender.com/api` with your backend API URL if different.
 
-1. Start the development server:
+## Running the Application
+
+To start the development server, use:
+
+- Using npm:
+
     ```bash
-    npm run dev
-    # or
-    yarn dev
+    npm start
     ```
 
-2. Open your browser and navigate to `http://localhost:5173`.
+- Or using yarn:
 
-## Project Structure
+    ```bash
+    yarn start
+    ```
 
-crm-frontend/
-├── public/
-│ └── index.html
-├── src/
-│ ├── components/
-│ │ ├── Auth/
-│ │ │ ├── Login.jsx
-│ │ │ └── Register.jsx
-│ │ ├── Customers/
-│ │ │ ├── CustomerForm.jsx
-│ │ │ └── CustomerList.jsx
-│ │ ├── Layout/
-│ │ │ ├── Navbar.jsx
-│ │ │ └── Footer.jsx
-│ │ └── Dashboard.jsx
-│ ├── pages/
-│ │ ├── Home.jsx
-│ │ ├── LoginPage.jsx
-│ │ └── RegisterPage.jsx
-│ ├── App.jsx
-│ ├── index.css
-│ └── main.jsx
-├── package.json
-└── vite.config.js
+This will start the React application and you can view it in your browser at `http://localhost:3000`.
 
+## Building for Production
 
-## Environment Variables
+To create a production build of the application, use:
 
-- `VITE_API_BASE_URL`: The base URL of the backend API.
+- Using npm:
 
-## Available Scripts
+    ```bash
+    npm run build
+    ```
 
-In the project directory, you can run:
+- Or using yarn:
 
-### `npm run dev` or `yarn dev`
-Runs the app in development mode. Open `http://localhost:5173` to view it in the browser. The page will reload if you make edits. You will also see any lint errors in the console.
+    ```bash
+    yarn build
+    ```
 
-### `npm run build` or `yarn build`
-Builds the app for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
+This will create a `build` directory with the production build of your application.
 
-### `npm run preview` or `yarn preview`
-Locally preview the production build.
+## Contributing
 
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-To learn Material-UI, check out the [Material-UI documentation](https://mui.com/).
-
-To learn Vite, check out the [Vite documentation](https://vitejs.dev/).
+1. **Fork the repository** and clone it to your local machine.
+2. **Create a new branch** for your feature or bug fix.
+3. **Make your changes** and commit them with clear, descriptive messages.
+4. **Push your changes** to your fork.
+5. **Submit a pull request** describing your changes and the problem they address.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Contact
+
+For any questions or feedback, please contact [gobigobi3108@gmail.com].
+
+---
+
+Happy coding!
