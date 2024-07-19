@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Layout/Navbar';
-import Footer from './components/Layout/Footer';
 import Home from './pages/Home';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -24,7 +23,6 @@ const App = () => {
         <Route path="/reports" element={<Reports />} />
         <Route path="/follow-up" element={<FollowUpPage />} />
       </Routes>
-      <Footer />
     </Router>
   );
 };
