@@ -91,6 +91,7 @@ const CustomerForm = () => {
             margin="normal"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            placeholder='Enter Your Name'
           />
           <TextField
             label="Email"
@@ -99,6 +100,7 @@ const CustomerForm = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder='Enter Your E-Mail ID'
           />
           <TextField
             label="Phone"
@@ -106,6 +108,7 @@ const CustomerForm = () => {
             margin="normal"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            placeholder='Enter Your Mob No'
           />
           <TextField
             label="Address"
@@ -113,6 +116,7 @@ const CustomerForm = () => {
             margin="normal"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
+            placeholder='Enter Your Address'
           />
           <TextField
             label="Source"
@@ -120,6 +124,7 @@ const CustomerForm = () => {
             margin="normal"
             value={source}
             onChange={(e) => setSource(e.target.value)}
+            placeholder='Ex: Website'
           />
           <TextField
             label="Status"
@@ -127,6 +132,7 @@ const CustomerForm = () => {
             margin="normal"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
+            placeholder='Ex: New,Contacted,Interested,Converted'
           />
           <TextField
             label="Purchase History"
