@@ -8,7 +8,8 @@ import RegisterPage from './pages/RegisterPage';
 import Dashboard from './components/Dashboard';
 import CustomerForm from './components/Customers/CustomerForm';
 import CustomerList from './components/Customers/CustomerList';
-
+import Reports from './components/Customers/Reports';
+import FollowUpPage from './components/FollowUpPage/FollowUpPage';
 const App = () => {
   return (
     <Router>
@@ -20,6 +21,8 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/add-customer" element={<CustomerForm />} />
         <Route path="/customer-list" element={<CustomerList />} />
+        <Route path="/reports" element={<Reports />} />
+        <Route path="/follow-up" element={<FollowUpPage />} />
       </Routes>
       <Footer />
     </Router>

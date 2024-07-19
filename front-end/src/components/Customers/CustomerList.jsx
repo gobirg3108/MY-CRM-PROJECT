@@ -17,12 +17,13 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
-import { jwtDecode } from 'jwt-decode';
-import './CustomerList.css'; // Make sure to import your CSS file for custom styles
+import { jwtDecode } from "jwt-decode";
+
+import './CustomerList.css';
 
 const CustomerList = () => {
   const [customers, setCustomers] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false); // State to track admin status
+  const [isAdmin, setIsAdmin] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(null);
   const [formData, setFormData] = useState({
@@ -31,6 +32,8 @@ const CustomerList = () => {
     phone: '',
     address: '',
     source: '',
+    status: '',
+    purchaseHistory: '',
   });
 
   useEffect(() => {
@@ -49,7 +52,6 @@ const CustomerList = () => {
 
         setCustomers(res.data);
 
-        // Decode JWT token to get user role
         const decodedToken = jwtDecode(token);
         const userRole = decodedToken.user.role;
         setIsAdmin(userRole === 'admin');
@@ -74,7 +76,6 @@ const CustomerList = () => {
         },
       });
 
-      // Update state to reflect deleted customer
       setCustomers(customers.filter((customer) => customer._id !== customerId));
     } catch (err) {
       console.error('Error deleting customer:', err.response ? err.response.data : err.message);
@@ -89,6 +90,8 @@ const CustomerList = () => {
       phone: customer.phone,
       address: customer.address,
       source: customer.source,
+      status: customer.status,
+      purchaseHistory: customer.purchaseHistory,
     });
     setEditMode(true);
   };
@@ -102,6 +105,8 @@ const CustomerList = () => {
       phone: '',
       address: '',
       source: '',
+      status: '',
+      purchaseHistory: '',
     });
   };
 
@@ -127,7 +132,6 @@ const CustomerList = () => {
         },
       });
 
-      // Update state to reflect updated customer
       const updatedCustomers = customers.map((customer) =>
         customer._id === res.data._id ? res.data : customer
       );
@@ -141,7 +145,7 @@ const CustomerList = () => {
 
   return (
     <Container className="customer-list-container">
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom style={{ fontWeight: 'bold' }}>
         Customer List
       </Typography>
       <TableContainer component={Paper}>
@@ -153,14 +157,15 @@ const CustomerList = () => {
               <TableCell>Phone</TableCell>
               <TableCell>Address</TableCell>
               <TableCell>Source</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Purchase History</TableCell>
               {isAdmin && <TableCell>Action</TableCell>}
-              {/* Show Action column for admin only */}
             </TableRow>
           </TableHead>
           <TableBody>
             {customers.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={isAdmin ? 6 : 5} className="empty-message">
+                <TableCell colSpan={isAdmin ? 8 : 7} className="empty-message">
                   No customers found
                 </TableCell>
               </TableRow>
@@ -172,13 +177,15 @@ const CustomerList = () => {
                   <TableCell>{customer.phone}</TableCell>
                   <TableCell>{customer.address}</TableCell>
                   <TableCell>{customer.source}</TableCell>
+                  <TableCell>{customer.status}</TableCell>
+                  <TableCell>{customer.purchaseHistory}</TableCell>
                   {isAdmin && (
                     <TableCell>
                       <Button
                         variant="contained"
                         color="primary"
                         onClick={() => handleEditCustomer(customer)}
-                        sx={{ mr: 1 }} // Apply padding using sx prop (Material-UI v5)
+                        sx={{ mr: 1, px: 2, py: 1 }}
                       >
                         Edit
                       </Button>
@@ -186,7 +193,7 @@ const CustomerList = () => {
                         variant="contained"
                         color="secondary"
                         onClick={() => handleDeleteCustomer(customer._id)}
-                        sx={{ mr: 1 }} // Apply padding using sx prop (Material-UI v5)
+                        sx={{ mr: 1, px: 2, py: 1 }}
                       >
                         Delete
                       </Button>
@@ -199,7 +206,6 @@ const CustomerList = () => {
         </Table>
       </TableContainer>
 
-      {/* Edit Customer Dialog */}
       <Dialog open={editMode} onClose={handleCloseEdit}>
         <DialogTitle>Edit Customer</DialogTitle>
         <DialogContent>
@@ -247,6 +253,24 @@ const CustomerList = () => {
             type="text"
             fullWidth
             value={formData.source}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="status"
+            label="Status"
+            type="text"
+            fullWidth
+            value={formData.status}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="purchaseHistory"
+            label="Purchase History"
+            type="text"
+            fullWidth
+            value={formData.purchaseHistory}
             onChange={handleChange}
           />
         </DialogContent>

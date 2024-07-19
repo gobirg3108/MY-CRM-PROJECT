@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Container, Typography, Paper } from '@mui/material';
 import { jwtDecode } from "jwt-decode";
-import './CustomerForm.css'; // Import your CSS file for custom styles
+import './CustomerForm.css';
 
 const CustomerForm = () => {
   const [name, setName] = useState('');
@@ -11,7 +11,9 @@ const CustomerForm = () => {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [source, setSource] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false); // State to track admin status
+  const [status, setStatus] = useState('');
+  const [purchaseHistory, setPurchaseHistory] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,9 +28,8 @@ const CustomerForm = () => {
         const userRole = decodedToken.user.role;
         setIsAdmin(userRole === 'admin');
       } catch (err) {
-        console.error('Error decoding token:', err.message);
-        // Handle error or redirect to login page
-        navigate('/login'); // Redirect to login page if token is not valid or user is not admin
+        console.error('Error checking admin status:', err.response ? err.response.data : err.message);
+        navigate('/login');
       }
     };
 
@@ -43,22 +44,25 @@ const CustomerForm = () => {
         throw new Error('No token found');
       }
 
-      const res = await axios.post('https://my-crm-project.onrender.com/api/customers', {
+      const newCustomer = {
         name,
         email,
         phone,
         address,
         source,
-      }, {
+        status,
+        purchaseHistory,
+      };
+
+      await axios.post('https://my-crm-project.onrender.com/api/customers', newCustomer, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      console.log('Customer added:', res.data);
       navigate('/dashboard');
     } catch (err) {
-      console.error('Error adding customer:', err);
+      console.error('Error creating customer:', err.response ? err.response.data : err.message);
     }
   };
 
@@ -67,7 +71,7 @@ const CustomerForm = () => {
       <Container maxWidth="sm" className="access-denied-container">
         <Paper elevation={3} className="form-container">
           <Typography variant="h6" align="center" className="access-denied-text">
-            Access Denied. Only admins can add customers.
+            Access Denied. Only admins can add new customers.
           </Typography>
         </Paper>
       </Container>
@@ -77,24 +81,24 @@ const CustomerForm = () => {
   return (
     <Container maxWidth="sm">
       <Paper elevation={3} className="form-container">
-        <Typography variant="h5" gutterBottom className="form-title">Add Customer</Typography>
-        <form onSubmit={handleSubmit} className="form">
+        <Typography variant="h5" align="center" gutterBottom>
+          Add New Customer
+        </Typography>
+        <form onSubmit={handleSubmit}>
           <TextField
             label="Name"
             fullWidth
             margin="normal"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            required
           />
           <TextField
             label="Email"
-            type="email"
             fullWidth
             margin="normal"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
           <TextField
             label="Phone"
@@ -102,7 +106,6 @@ const CustomerForm = () => {
             margin="normal"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            required
           />
           <TextField
             label="Address"
@@ -117,9 +120,24 @@ const CustomerForm = () => {
             margin="normal"
             value={source}
             onChange={(e) => setSource(e.target.value)}
-            placeholder='Ex: new,contacted,interested'
           />
-          <Button type="submit" variant="contained" color="primary" fullWidth className="submit-button">Add Customer</Button>
+          <TextField
+            label="Status"
+            fullWidth
+            margin="normal"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          />
+          <TextField
+            label="Purchase History"
+            fullWidth
+            margin="normal"
+            value={purchaseHistory}
+            onChange={(e) => setPurchaseHistory(e.target.value)}
+          />
+          <Button type="submit" variant="contained" color="primary" fullWidth>
+            Add Customer
+          </Button>
         </form>
       </Paper>
     </Container>

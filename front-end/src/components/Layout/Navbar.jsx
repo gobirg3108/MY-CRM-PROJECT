@@ -37,6 +37,12 @@ const Navbar = () => {
         <ListItem button component={Link} to="/add-customer">
           <ListItemText primary="Add Customer" />
         </ListItem>
+        <ListItem button component={Link} to="/reports">
+          <ListItemText primary="Reports" />
+        </ListItem>
+        <ListItem button component={Link} to="/follow-up">
+          <ListItemText primary="Follow-Up" />
+        </ListItem>
         <ListItem button onClick={handleLogout}>
           <ListItemText primary="Logout" />
         </ListItem>
@@ -63,6 +69,8 @@ const Navbar = () => {
           <Button color="inherit" component={Link} to="/">Home</Button>
           <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
           <Button color="inherit" component={Link} to="/add-customer">Add Customer</Button>
+          <Button color="inherit" component={Link} to="/reports">Reports</Button>
+          <Button color="inherit" component={Link} to="/follow-up">Follow-Up</Button>
           <Button color="inherit" onClick={handleLogout}>Logout</Button>
         </Box>
       </Toolbar>
